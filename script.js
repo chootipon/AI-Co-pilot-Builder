@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // =================================================================
     // 1. ค่าคงที่และตัวแปร (Constants and Variables)
     // =================================================================
-    const RENDER_APP_URL = process.env.RENDER_EXTERNAL_URL || 'https://backend-server-yr22.onrender.com'; // <<-- แก้ไข URL ของ Render App คุณ
-    const LIFF_ID = process.env.LINE_LIFF_ID || 'https://liff.line.me/2007746118-q42ABEk3'; // <<-- แก้ไข LIFF ID ของคุณ
+    
+    // ## ส่วนที่แก้ไข: ใส่ URL และ ID ของคุณลงไปตรงๆ ที่นี่ ##
+    const RENDER_APP_URL = 'https://backend-server-yr22.onrender.com'; // <<-- ใส่ URL ของ Backend (server.js) ของคุณ
+    const LIFF_ID = '2007746118-q42ABEk3'; // <<-- ใส่เฉพาะ LIFF ID ของคุณ
 
     // --- การอ้างอิงถึง Element ต่างๆ ในหน้าเว็บ ---
     const profilePicture = document.getElementById('profile-picture');
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelConnectBtn = document.getElementById('cancel-connect-btn');
     const saveConnectBtn = document.getElementById('save-connect-btn');
     const closeWebhookModalBtn = document.getElementById('close-webhook-modal-btn');
+
 
     // =================================================================
     // 2. ฟังก์ชันหลัก (Core Functions)
@@ -229,8 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ assistantId, message: userInput }),
             });
             if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+            
             const result = await response.json();
             addMessageToChat('ai', result.reply);
+
         } catch (error) {
             addMessageToChat('ai', `ขออภัยค่ะ เกิดข้อผิดพลาด: ${error.message}`);
         }
@@ -276,10 +281,30 @@ document.addEventListener('DOMContentLoaded', function() {
         connectModal.classList.remove('hidden');
     }
 
+    function addMessageToChat(sender, text) {
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (loadingIndicator) loadingIndicator.remove();
+
+        let messageHtml = '';
+        const sanitizedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        if (sender === 'user') {
+            messageHtml = `<div class="flex items-start gap-2.5 justify-end"><div class="flex flex-col gap-1"><div class="bg-indigo-500 text-white rounded-s-xl rounded-ee-xl p-3"><p class="text-sm">${sanitizedText}</p></div></div></div>`;
+        } else if (sender === 'ai') {
+            messageHtml = `<div class="flex items-start gap-2.5"><div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">AI</div><div class="flex flex-col gap-1"><div class="bg-slate-100 rounded-e-xl rounded-es-xl p-3"><p class="text-sm text-slate-900">${sanitizedText}</p></div></div></div>`;
+        } else if (sender === 'loading') {
+            messageHtml = `<div id="loading-indicator" class="flex items-start gap-2.5"><div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">AI</div><div class="flex flex-col gap-1"><div class="bg-slate-100 rounded-e-xl rounded-es-xl p-3 flex items-center gap-2"><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span></div></div></div>`;
+        }
+
+        chatMessages.insertAdjacentHTML('beforeend', messageHtml);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
     // =================================================================
     // 4. การผูก Event Listeners (Event Listeners Binding)
     // =================================================================
-    main();
+    
+    main(); // <-- เริ่มต้นการทำงานทั้งหมด
     navButtons.forEach(btn => btn.addEventListener('click', () => showPage(btn.getAttribute('data-page'))));
     if (saveKnowledgeButton) saveKnowledgeButton.addEventListener('click', handleSaveKnowledge);
     if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
