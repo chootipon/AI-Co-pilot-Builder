@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. ค่าคงที่และตัวแปร (Constants and Variables)
     // =================================================================
     
-    // ## ส่วนที่แก้ไข: ใส่ URL และ ID ของคุณลงไปตรงๆ ที่นี่ ##
-    const RENDER_APP_URL = 'https://backend-server-yr22.onrender.com'; // <<-- ใส่ URL ของ Backend (server.js) ของคุณ
-    const LIFF_ID = '2007746118-q42ABEk3'; // <<-- ใส่เฉพาะ LIFF ID ของคุณ
+    // ## ส่วนที่แก้ไข: ทำให้เรียก API ในบ้านตัวเอง ##
+    const RENDER_APP_URL = ''; // ไม่ต้องใส่อะไรเลย มันจะเรียกหา URL ปัจจุบันโดยอัตโนมัติ
+    const LIFF_ID = 'YOUR_LIFF_ID'; // <<-- สำคัญมาก: ใส่ LIFF ID ของคุณ
 
     // --- การอ้างอิงถึง Element ต่างๆ ในหน้าเว็บ ---
     const profilePicture = document.getElementById('profile-picture');
@@ -305,12 +305,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // =================================================================
     
     main(); // <-- เริ่มต้นการทำงานทั้งหมด
-    navButtons.forEach(btn => btn.addEventListener('click', () => showPage(btn.getAttribute('data-page'))));
+
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showPage(btn.getAttribute('data-page'));
+        });
+    });
+
     if (saveKnowledgeButton) saveKnowledgeButton.addEventListener('click', handleSaveKnowledge);
     if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
+    
     addAssistantBtn.addEventListener('click', () => createAssistantModal.classList.remove('hidden'));
     cancelCreateBtn.addEventListener('click', closeAllModals);
     saveCreateBtn.addEventListener('click', handleCreateAssistant);
+
     assistantList.addEventListener('click', function(event) {
         const connectButton = event.target.closest('.connect-btn');
         if (connectButton) {
@@ -318,8 +326,11 @@ document.addEventListener('DOMContentLoaded', function() {
             openConnectModal(assistantId);
         }
     });
+    
     cancelConnectBtn.addEventListener('click', closeAllModals);
     saveConnectBtn.addEventListener('click', handleSaveConnection);
     closeWebhookModalBtn.addEventListener('click', closeAllModals);
+
+    // --- แสดงหน้าแรกเมื่อเริ่มต้น ---
     showPage('dashboard-page');
 });
