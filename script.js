@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =================================================================
     // 1. ค่าคงที่และตัวแปร (Constants and Variables)
     // =================================================================
-    const RENDER_APP_URL = process.env.RENDER_EXTERNAL_URL || 'https://ai-co-pilot-builder.onrender.com/'; // <<-- แก้ไข URL ของ Render App คุณ
+    const RENDER_APP_URL = process.env.RENDER_EXTERNAL_URL || 'https://backend-server-yr22.onrender.com'; // <<-- แก้ไข URL ของ Render App คุณ
     const LIFF_ID = process.env.LINE_LIFF_ID || 'https://liff.line.me/2007746118-q42ABEk3'; // <<-- แก้ไข LIFF ID ของคุณ
 
     // --- การอ้างอิงถึง Element ต่างๆ ในหน้าเว็บ ---
